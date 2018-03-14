@@ -6,7 +6,6 @@ import glob
 from matplotlib import pyplot
 
 
-GENRE_DIR = "genres"
 GENRES = ["blues", "classical", "country", "disco", "hiphop", "jazz",
 	  "metal", "pop", "reggae", "rock"]
 
@@ -17,7 +16,7 @@ def create_fft(fn):
 	data_fn = base_fn + ".fft"
 	np.save(data_fn, fft_features)
 
-def read_fft(genre_list, base_dir=GENRE_DIR):
+def read_fft(genre_list, base_dir):
 	X = []     #will store fft features
 	y = []     #will store labels
 	for label, genre in enumerate(genre_list):    #loop using label as numeric index, and genre as iterator over genres
@@ -47,19 +46,6 @@ def plot_confusion_matrix(cm, genre_list, name, title):
 	pyplot.show()
 
 
-def genre_create_fft(direct):      #create fft files for a given directory (direct for a genre)
-    for filename in os.listdir(direct):
-	if filename.endswith(".wav"): 	
-		create_fft(direct+filename)
-
-
-def root_create_fft(root):    #create fft for every genre starting from the root ("genres")
-    for subdir_name in os.listdir(root): 
-	if os.path.isdir(root + subdir_name):	
-	    genre_path = root + subdir_name
-	    genre_create_fft(genre_path + "/")
-
-#root_create_fft(GENRE_DIR + "/")
 #X, y = read_fft(GENRES, GENRE_DIR)      #get the data set
 
 #TEST GRAPHICAL CONFUSION MATRIX
