@@ -19,9 +19,8 @@ def plot_confusion_matrix(cm, genre_list, name, title):
 	plt.show()
 
 def plot_roc_curves(fpr, tpr, AUC, label):
-	f, axarr = plt.subplots(3, 2, figsize=(10, 10))
-	plt.xlabel('False Positive Rate')
-	plt.ylabel('True Positive Rate')
+	f, axarr = plt.subplots(3, 2, figsize=(10, 12))
+	plt.subplots_adjust(left=0.1, right=0.925, top=0.925, bottom=0.1, wspace=0.3, hspace=0.5)
 
 	for r in range(3):
 		for c in range(2):
@@ -32,6 +31,8 @@ def plot_roc_curves(fpr, tpr, AUC, label):
 			axarr[r][c].plot([0, 1], [0, 1], 'b--')
 			axarr[r][c].set_xlim([0.0, 1.0])
 			axarr[r][c].set_ylim([0.0, 1.0])
+			axarr[r][c].set_xlabel('False Positive Rate')
+			axarr[r][c].set_ylabel('True Positive Rate')
 			axarr[r][c].set_title('ROC curve for ' + label[i] + ' - AUC = %0.2f' % AUC[i])
 			# plt.savefig('Log_ROC')
 
