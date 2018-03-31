@@ -1,6 +1,7 @@
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import normalize
+from sklearn.metrics import classification_report
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve
 
@@ -31,6 +32,9 @@ if __name__ == "__main__":
 	scores = model_selection.cross_val_score(lr, x, y, cv=cv)
 	y_pred = model_selection.cross_val_predict(lr, x, y, cv=cv)
 	print("%1d-fold cross validation average accuracy: %.3f" % (folds, scores.mean()))
+
+	# classification report
+	print(classification_report(y, y_pred))
 
 	# confusion matrix
 	cm = normalize(confusion_matrix(y, y_pred), axis=1, norm='l1')
