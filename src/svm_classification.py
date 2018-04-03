@@ -6,8 +6,12 @@ warnings.filterwarnings("ignore", category=RuntimeWarning)
 from sklearn.cross_validation import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.grid_search import GridSearchCV
+from sklearn.model_selection import cross_val_score, KFold
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
+from sklearn.metrics import precision_score
+from sklearn.metrics import roc_curve
+from sklearn.metrics import roc_auc_score
 from sklearn.preprocessing import scale
 from sklearn.preprocessing import normalize
 import sys
@@ -21,9 +25,9 @@ import plots
 genres_dir = '../genres'
 
 def run_classifier(data, target):
-   data_train, data_test, target_train, target_test = train_test_split(data, target)
+   data_train, data_test, target_train, target_test = train_test_split(data, target, test_size=0.25, random_state=43)
    #pline = Pipeline([('clf', SVC(C=1.0, kernel='rbf', gamma=0.01))])
-   svc = SVC()
+   svc = SVC(probability=True)
    print "Shape of training set: %s" % (data_train.shape,)
    print "Shape of test set: %s" % (data_test.shape,)
 
@@ -33,7 +37,7 @@ def run_classifier(data, target):
    }
 
    gsearch = GridSearchCV(svc, params, n_jobs=2,
-		   verbose=1, scoring='f1_micro')
+		   verbose=1, scoring='f1_micro', cv=5)
 
    gsearch.fit(data_train, target_train)
    print 'Best score: %0.3f' % gsearch.best_score_
@@ -51,6 +55,20 @@ def run_classifier(data, target):
    conf_matr = normalize(conf_matr)
    plots.plot_confusion_matrix(conf_matr, mg_fft.GENRES, "Confusion Matrix", "Music Genres")
 
+   #gather data for ROC curves
+   fprs = []
+   tprs = []
+   AUCs = []
+   for label in range(len(mg_fft.GENRES)):
+	   target_label_test = np.asarray(target_test==label, dtype=int)
+	   proba = gsearch.predict_proba(data_test)
+	   proba_label = proba[:, label]
+   	   fpr, tpr, roc_thresholds = roc_curve(target_label_test, proba_label) 
+	   fprs.append(fpr)
+	   tprs.append(tpr)
+	   AUCs.append(roc_auc_score(target_label_test, proba_label))
+
+   plots.plot_roc_curves(fprs, tprs, AUCs, mg_fft.GENRES)
 
 if __name__ == '__main__':
    if (len(sys.argv)) < 2:

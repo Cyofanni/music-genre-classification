@@ -36,4 +36,4 @@ def plot_roc_curves(fpr, tpr, AUC, label):
 			axarr[r][c].set_title('ROC curve for ' + label[i] + ' - AUC = %0.2f' % AUC[i])
 			# plt.savefig('Log_ROC')
 
-plt.show()
+	plt.show()
