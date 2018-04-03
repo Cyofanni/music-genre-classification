@@ -2,7 +2,7 @@ import music_genre_fft as mgfft
 import music_genre_mfcc as mgmfcc
 import os
 
-GENRE_DIR = "genres"
+GENRE_DIR = "../genres"
 
 def genre_create_fftandceps(direct):      #create fft and ceps files for a given directory (direct for a genre)
     for filename in os.listdir(direct):
