@@ -25,16 +25,22 @@ import plots
 genres_dir = '../genres'
 
 def run_classifier(data, target):
-   data_train, data_test, target_train, target_test = train_test_split(data, target, test_size=0.25, random_state=43)
+   data_train, data_test, target_train, target_test = train_test_split(data, target, test_size=0.25, random_state=42)
    #pline = Pipeline([('clf', SVC(C=1.0, kernel='rbf', gamma=0.01))])
    svc = SVC(probability=True)
    print "Shape of training set: %s" % (data_train.shape,)
    print "Shape of test set: %s" % (data_test.shape,)
 
-   params = {
-	   'gamma': (0.01, 0.03, 0.1, 0.3, 1, 3, 5),
-	   'C': (0.1, 0.3, 1, 3, 10, 30, 50, 100),
-   }
+   #params = {
+   #	   'kernel': ('poly', 'rbf', 'sigmoid', 'precomputed'),
+   #	   'gamma': (0.01, 0.03, 0.1, 0.3, 1, 3, 5),
+   #	   'C': (0.1, 0.3, 1, 3, 10, 30, 50, 100),
+   #}
+   params = [
+	   {'C': [0.1, 0.3, 1, 3, 10, 30], 'gamma': [0.01, 0.03, 0.1, 0.3, 1, 3, 5], 'degree': [2,3,4],
+           'kernel': ['rbf', 'poly', 'sigmoid']},
+   	  # {'C': (0.1, 0.3, 1, 3, 10, 30, 50, 100), 'gamma': (0.01, 0.03, 0.1, 0.3, 1, 3, 5), 'kernel': ['rbf']},
+   ]
 
    gsearch = GridSearchCV(svc, params, n_jobs=2,
 		   verbose=1, scoring='f1_micro', cv=5)
@@ -45,8 +51,12 @@ def run_classifier(data, target):
    print 'Best parameters set:'
    best_params = gsearch.best_estimator_.get_params()
 
-   for param_name in sorted(params.keys()):
-	   print '\t%s: %r' % (param_name, best_params[param_name])
+   #for param_name in sorted(params.keys()):
+   #	   print '\t%s: %r' % (param_name, best_params[param_name])
+
+   for dict_item in params:
+	for param_name in sorted(dict_item.keys()):
+		print '\t%s: %r' % (param_name, best_params[param_name])
 
    preds = gsearch.predict(data_test)
    print classification_report(target_test, preds, target_names=mg_fft.GENRES)
@@ -63,7 +73,7 @@ def run_classifier(data, target):
 	   target_label_test = np.asarray(target_test==label, dtype=int)
 	   proba = gsearch.predict_proba(data_test)
 	   proba_label = proba[:, label]
-   	   fpr, tpr, roc_thresholds = roc_curve(target_label_test, proba_label) 
+   	   fpr, tpr, roc_thresholds = roc_curve(target_label_test, proba_label)
 	   fprs.append(fpr)
 	   tprs.append(tpr)
 	   AUCs.append(roc_auc_score(target_label_test, proba_label))
