@@ -8,6 +8,7 @@ from sklearn.metrics import roc_curve
 from sklearn import model_selection
 from sklearn.model_selection import cross_val_score, KFold
 
+# from music_genre_fft import read_fft
 from music_genre_mfcc import read_ceps
 from plots import plot_confusion_matrix
 from plots import plot_roc_curves
@@ -20,6 +21,7 @@ genre_list = ["classical", "jazz", "country", "pop", "rock", "metal"]
 
 if __name__ == "__main__":
 	# reading inputs
+	# x, y = read_fft(genre_list, "genres")
 	x, y = read_ceps(genre_list, "genres")
 
 	# multi-layer perceptron model
