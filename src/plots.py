@@ -20,11 +20,11 @@ def plot_confusion_matrix(cm, genre_list, name, title):
 	plt.show()
 
 def plot_roc_curves(fpr, tpr, AUC, label):
-	f, axarr = plt.subplots(3, 2, figsize=(10, 12))
+	f, axarr = plt.subplots(3, 3, figsize=(14, 12))
 	plt.subplots_adjust(left=0.1, right=0.925, top=0.925, bottom=0.1, wspace=0.3, hspace=0.5)
 
 	for r in range(3):
-		for c in range(2):
+		for c in range(3):
 			i = 2 * r + c
 
 			axarr[r][c].plot(fpr[i], tpr[i], 'lightblue')
