@@ -25,7 +25,7 @@ def plot_roc_curves(fpr, tpr, AUC, label):
 
 	for r in range(3):
 		for c in range(3):
-			i = 2 * r + c
+			i = 3 * r + c
 
 			axarr[r][c].plot(fpr[i], tpr[i], 'lightblue')
 			axarr[r][c].fill_between(fpr[i], 0, tpr[i], facecolor='lightblue', alpha=0.5)
