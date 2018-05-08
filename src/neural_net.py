@@ -26,7 +26,7 @@ if __name__ == "__main__":
 	start_time = time.time()
 
 	# multi-layer perceptron model
-	mlp = MLPClassifier(solver='lbfgs', hidden_layer_sizes=(13, 20, 20))
+	mlp = MLPClassifier(solver='lbfgs', hidden_layer_sizes=(13, 35, 35))
 	print("Training, please wait")
 
 	# cross validation
