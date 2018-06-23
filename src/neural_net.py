@@ -6,27 +6,45 @@ from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve
 
 from sklearn import model_selection
-from sklearn.model_selection import cross_val_score, KFold
+from sklearn.model_selection import cross_val_score, KFold, LeaveOneOut
 
 from music_genre_mfcc import read_ceps
+from music_genre_fft import read_fft
 from plots import plot_confusion_matrix
 from plots import plot_roc_curves
 
 import numpy as np
 import time
+import sys
 
 
 genre_list = ["blues", "classical", "country", "disco", "jazz", "metal", "pop", "reggae", "rock"]
 
 
 if __name__ == "__main__":
+	if (len(sys.argv)) < 2:
+		print "Usage: \"python neural_net.py -fft\" or \"python neural_net.py -mfcc\""
+		sys.exit(1)
+
 	# reading inputs
-	x, y = read_ceps(genre_list, "genres")
+	x = []
+	y = []
+	if (sys.argv[1] == '-fft'):
+		x, y = read_fft(genre_list, "genres")
+	elif (sys.argv[1] == '-mfcc'):
+		x, y = read_ceps(genre_list, "genres")
+	else:
+		print "Options can only be -fft or -mfcc"
+		sys.exit(1)
 
 	start_time = time.time()
 
 	# multi-layer perceptron model
-	mlp = MLPClassifier(solver='lbfgs', hidden_layer_sizes=(13, 35, 35))
+	mlp = None
+	if (sys.argv[1] == '-fft'):
+		mlp = MLPClassifier(solver='adam')
+	elif (sys.argv[1] == '-mfcc'):
+		mlp = MLPClassifier(solver='lbfgs', hidden_layer_sizes=(13, 20, 20))
 	print("Training, please wait")
 
 	# cross validation
